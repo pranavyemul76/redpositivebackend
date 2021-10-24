@@ -1,6 +1,20 @@
-const { response } = require('express')
-const { message } = require('statuses')
-const User = require('../Modules/User')
+const { response } = require('express');
+const { message } = require('statuses');
+const User = require('../Modules/User');
+const nodemailer= require('nodemailer');
+const transporter = nodemailer.createTransport({
+   
+    service: "Gmail",
+    secure:false,
+    auth: {
+       user:'sonypranav131@gmail.com',
+       pass:'PRanAV76@',
+    },
+    tls: {
+      rejectUnauthorized: false
+  }
+  });
+
 
 exports.userdata=(req,res)=>{
     try{
@@ -55,3 +69,19 @@ exports.userupdate= async(req,res)=>{
         res.json({messeage:error})
     }
 }       
+exports.sendemail=(req,res)=>{
+    transporter.sendMail({
+        from:'sonypranav131@gmail.com',
+        to: "pranavyemul76@gmail.com",
+        subject: 'Verify Account OTP is 5684',
+          text: `otp is `,
+          html:`<p>name:${req.body.username}</p>
+          <p>name:${req.body.phone}</p>
+          <p>name:${req.body.email}</p>
+          <p>name:${req.body.hobbies}</p>`,
+      }) .then( response => { res.status(200).json({ messeage: "please check email"})}
+            
+      )
+      .catch( response =>{ res.status(500).json({message:"error"})})
+
+}
